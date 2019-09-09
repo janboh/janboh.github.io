@@ -8,6 +8,9 @@ Alles was ich lerne, sammle und entwickle.
 Super Tutorial:
 https://thebookofshaders.com/
 
+Nach Book of Shaders(oder parallel):
+https://webglfundamentals.org/
+
 Vorlagen etc.:
 http://iquilezles.org/
 
