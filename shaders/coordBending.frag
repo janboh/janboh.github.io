@@ -66,8 +66,13 @@ void main() {
     vec2 st = gl_FragCoord.st/u_resolution;
     st.x *= u_resolution.x / u_resolution.y;
 
+ 
     
-    st *= 50.;
+    float calcY = mod(st.y, M_PI * 1.);
+
+    st = vec2(st.x * cos(calcY), st.x * sin(calcY));
+
+    st *= 10.;
 
     float n =  noise(st / 4.);
     st = offsetting(st, sin(u_time));

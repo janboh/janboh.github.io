@@ -9,39 +9,38 @@
 </head>
 
 <body>
-  <canvas id="c" width="398" height="298"></canvas>
+  <canvas id="c" ></canvas>
 
   <script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
 
   <script id="2d-vertex-shader" type="notjs">
 
-    // an attribute will receive data from a buffer
     attribute vec4 a_position;
 
-    // all shaders have a main function
-    void main() {
+    uniform vec2 u_resolution;
 
-      // gl_Position is a special variable a vertex shader
-      // is responsible for setting
-      gl_Position = a_position;
+    void main() {
+       // convert the position from pixels to 0.0 to 1.0
+       vec2 zeroToOne = a_position.xy / u_resolution;
+
+       // convert from 0->1 to 0->2
+       vec2 zeroToTwo = zeroToOne * 2.0;
+
+       // convert from 0->2 to -1->+1 (clipspace)
+       vec2 clipSpace = zeroToTwo - 1.0;
+
+       gl_Position = vec4(clipSpace, 0, 1);
     }
 
   </script>
 
   <script id="2d-fragment-shader" type="notjs" >
 
-    // fragment shaders don't have a default precision so we need
-  // to pick one. mediump is a good default
-  precision mediump float;
-  uniform vec2 u_resolution;
-  void main() {
-    // gl_FragColor is a special variable a fragment shader
-    // is responsible for setting
-    vec2 st = gl_FragCoord.st/u_resolution;
+    precision mediump float;
 
-    gl_FragColor = vec4(st.x, 0, 0.5, 1); // return redish-purple
-  }
-
+    void main() {
+      gl_FragColor = vec4(0.4, 0.2, 0, 1); // return redish-purple
+    }
 
   </script>
 
@@ -101,6 +100,8 @@
       // look up where the vertex data needs to go.
       var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
+      var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+
       // Create a buffer and put three 2d clip space points in it
       var positionBuffer = gl.createBuffer();
 
@@ -108,9 +109,12 @@
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
       var positions = [
-        0, 0,
-        0, 1,
-        1, 0,
+        10, 10,
+        10, 290,
+        390, 10,
+        10, 290,
+        390, 290,
+        390, 10,
       ];
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
@@ -143,10 +147,13 @@
       var offset = 0;        // start at the beginning of the buffer
       gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
 
+      // set the resolution
+      gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+
       // draw
       var primitiveType = gl.TRIANGLES;
       var offset = 0;
-      var count = 3;
+      var count = 6;
       gl.drawArrays(primitiveType, offset, count);
     }
 
