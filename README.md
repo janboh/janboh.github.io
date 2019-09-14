@@ -25,6 +25,8 @@ Kaleidoskop: http://glsl.erogenous-tones.com/e#1537.0
 
 Kreise mit cooler Color-Map: http://glsl.erogenous-tones.com/e#1521.0
 
+Escher Tilings: https://www.shadertoy.com/view/MstBR7
+
 Escher-Krümmung: http://isohedral.ca/escher-like-spiral-tilings/
 
 ## Weiteres

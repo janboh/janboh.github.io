@@ -36,12 +36,12 @@ float noise (in vec2 st) {
 }
 
 vec2 offsetting(in vec2 st, in float offset){
-  float time = fract(u_time* 0.4) ;
+  float time = fract(u_time* 0.2) ;
 
   if(time < 0.5){
-    st.x += (step(1., mod(st.y, 2.)) * 2. -1.) * time * 2.;
+    st.x -= time;
   } else {
-    st.y += (step(1., mod(st.x, 2.)) * 2. -1.) * time * 2.;
+    st.y -= time;
   }
 
   return st;
@@ -50,7 +50,7 @@ vec2 offsetting(in vec2 st, in float offset){
 vec2 tiling(in vec2 st, in float zoom){
 
 	st *= zoom;
-  st = offsetting(st, sin(u_time));
+  //st = offsetting(st, sin(u_time));
   st = fract(st);
 
 	return st;
@@ -62,26 +62,42 @@ float circle(in vec2 st, in float size){
 	return mix(1., 0., smoothstep(size - smoothing, size + smoothing, length(st)));
 }
 
+float strokeH(in vec2 st){
+  return smoothstep(0.44, 0.46, fract(st.y)) - smoothstep(0.54, 0.56, fract(st.y));
+}
+
+float strokeV(in vec2 st){
+  return smoothstep(0.44, 0.46, fract(st.x)) - smoothstep(0.54, 0.56, fract(st.x));
+}
+
+vec2 bending(in vec2 st){
+  st = st * 2. - 1.;
+  return vec2(length(st), atan(st.x, st.y) / (M_PI * 2.));
+}
+
+mat2 rotate2d(float _angle){
+    return mat2(cos(_angle),-sin(_angle),
+                sin(_angle),cos(_angle));
+}
+
 void main() {
     vec2 st = gl_FragCoord.st/u_resolution;
-    st.x *= u_resolution.x / u_resolution.y;
+    //vec2 st = gl_FragCoord.st;
+    //st.x *= u_resolution.x / u_resolution.y;
 
- 
     
-    float calcY = mod(st.y, M_PI * 1.);
+    st = bending(st);
+    //st = rotate2d( M_PI * 0.22 ) * st;
 
-    st = vec2(st.x * cos(calcY), st.x * sin(calcY));
+    //tiling
+st *= 10.;
+    //Movement
+    //st.y = fract(st.y + u_time * 0.5);
+        
 
-    st *= 10.;
+    float n =  noise(st);
+    float circle1 = n;
 
-    float n =  noise(st / 4.);
-    st = offsetting(st, sin(u_time));
     
-    st = fract(st);
-    float circle1 = circle(st, 0.5) - n;
-    
-
-    //float circle2 = circle(tiling(st, 5.), 0.8);
-
     gl_FragColor = vec4(vec3(circle1), 1.0);
 }
