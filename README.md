@@ -19,6 +19,8 @@ http://iquilezles.org/
 
 Handbuch der Ornamentik - Franz S Meyer
 
+Lines: http://jeffreythompson.org/collision-detection/table_of_contents.php
+
 ### Shader
 
 Kaleidoskop: http://glsl.erogenous-tones.com/e#1537.0
