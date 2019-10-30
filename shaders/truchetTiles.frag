@@ -28,10 +28,10 @@ float truchetCurve(in vec2 st, in float xOrient, in float yOrient){
 }
 
 void main() {
-    vec2 st = gl_FragCoord.st/u_resolution;
-    st.x *= u_resolution.x / u_resolution.y;
+  vec2 st = gl_FragCoord.st/u_resolution;
+  st.x *= u_resolution.x / u_resolution.y;
 
-   	st *= 20.;
+  st *= 20.;
     
 	float secRowOff = step(2., mod(st.y, 4.));
 
@@ -40,8 +40,8 @@ void main() {
 					step(1., mod(st.y, 2.0)) + secRowOff;
 	
 
-  	st = fract(st);
-    float truchet = truchetCurve(st, xOrient, yOrient);
+  st = fract(st);
+  float truchet = truchetCurve(st, xOrient, yOrient);
 
-    gl_FragColor = vec4(vec3(truchet), 1.0);
+  gl_FragColor = vec4(vec3(truchet), 1.0);
 }
